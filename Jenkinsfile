@@ -19,14 +19,13 @@ pipeline {
             steps{ 
                 sh '''
                 PUBLIC_IP=$(aws ec2 describe-instances --instance-ids i-0d2817565eeac7442 --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
+                ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts
                 '''
                }
             }
         stage('connect to the master node') {
             steps{ 
                 sh '''
-                ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts
-                echo ok
                 ssh -i ~/test-servers-key.pem ubuntu@54.67.54.114 sudo kubectl apply -f kube_config/deployment.yml
                 '''
             }
