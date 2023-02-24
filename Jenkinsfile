@@ -6,7 +6,7 @@ pipeline {
             steps{ 
                 sh '''
                 echo ok
-                ssh -i ~/test-servers-key.pem ubuntu@54.67.54.114 whoami
+                ssh -i ~/test-servers-key.pem ubuntu@54.67.54.114 kubectl apply -f kube_config/deployment.yml
                 '''
             }
         }
