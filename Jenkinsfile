@@ -6,13 +6,23 @@ pipeline {
     Access_key = credentials('Access_key_ID')
      } 
     stages {
-        stage('build') {
+        stage('configure aws') {
             steps{ 
                 sh '''
                 aws configure set aws_access_key_id ${Access_key}
                 aws configure set aws_secret_access_key ${Secret_key}
                 aws configure set default.region us-west-1
+                }
+          }
+          stage('get master node public ip') {
+            steps{ 
+                sh '''
                 PUBLIC_IP=$(aws ec2 describe-instances --instance-ids i-0d2817565eeac7442 --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
+               }
+            }
+        stage('connect to the master node') {
+            steps{ 
+                sh '''
                 ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts
                 echo ok
                 ssh -i ~/test-servers-key.pem ubuntu@54.67.54.114 sudo kubectl apply -f kube_config/deployment.yml
