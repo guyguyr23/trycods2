@@ -16,6 +16,6 @@ pipeline {
                 ssh -T -i ~/test-servers-key.pem ubuntu@$PUBLIC_IP whoami
                 '''
             }
-        }
-    }
+     }
 }
+
