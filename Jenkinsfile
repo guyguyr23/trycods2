@@ -26,7 +26,7 @@ pipeline {
         stage('connect to the master node') {
             steps{ 
                 sh '''
-                ssh -i ~/test-servers-key.pem ubuntu@54.67.54.114 sudo kubectl apply -f kube_config/deployment.yml
+                ssh -i ~/test-servers-key.pem ubuntu@$PUBLIC_IP sudo kubectl apply -f kube_config/deployment.yml
                 '''
             }
         }
