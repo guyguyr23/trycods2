@@ -16,12 +16,10 @@ pipeline {
                 }
           }
           stage('get master node public ip') {
-            steps{ 
-                sh '''
-                PUBLIC_IP=$(aws ec2 describe-instances --instance-ids i-0d2817565eeac7442 --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
-                ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts     
-                '''
-                stash name: 'ip', includes: 'PUBLIC_IP.txt'
+            steps{                  
+                sh 'PUBLIC_IP=$(aws ec2 describe-instances --instance-ids i-0d2817565eeac7442 --query "Reservations[0].Instances[0].PublicIpAddress" --output text)'
+                stash name: 'ip', includes: 'public_ip.txt'
+                sh 'ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts'                                
                }
             }
         stage('connect to the master node') {
