@@ -19,9 +19,9 @@ pipeline {
             steps{ 
                 sh '''
                 PUBLIC_IP=$(aws ec2 describe-instances --instance-ids i-0d2817565eeac7442 --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
-                ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts
-                stash name: 'ip', includes: 'public_ip.txt'
+                ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts     
                 '''
+                stash name: 'ip', includes: 'PUBLIC_IP.txt'
                }
             }
         stage('connect to the master node') {
