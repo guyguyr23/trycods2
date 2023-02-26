@@ -30,7 +30,7 @@ pipeline {
                 unstash 'ip'
                 sh '''
                 PUBLIC_IP=$(cat ip.txt)
-                ssh -i ~/test-servers-key.pem ubuntu@$PUBLIC_IP sudo kubectl apply -f kube_config/deployment.yml
+                ssh -i ~/test-servers-key.pem ubuntu@$PUBLIC_IP sudo kubectl rollout restart deployment project-deployment
                 '''
             }
         }
