@@ -12,6 +12,7 @@ pipeline {
                 aws configure set aws_access_key_id ${Access_key}
                 aws configure set aws_secret_access_key ${Secret_key}
                 aws configure set default.region us-west-1
+                aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/y0a7i3y8
                 '''
                 }
           }
