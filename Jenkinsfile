@@ -1,18 +1,19 @@
-/* Requires the Docker Pipeline plugin */
 pipeline {
     agent any
-      environment {
+          environment {
     Secret_key = credentials('Secret_access_key')
     Access_key = credentials('Access_key_ID')
-     } 
-    stages {
-        stage('configure aws') {
+     }
+    options {
+        skipStagesAfterUnstable()
+    }
+    stages {  
+       stage('configure aws') {
             steps{ 
                 sh '''
                 aws configure set aws_access_key_id ${Access_key}
                 aws configure set aws_secret_access_key ${Secret_key}
                 aws configure set default.region us-west-1
-                aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/y0a7i3y8
                 '''
                 }
           }
@@ -31,10 +32,11 @@ pipeline {
                 unstash 'ip'
                 sh '''
                 PUBLIC_IP=$(cat ip.txt)
-                ssh -i ~/test-servers-key.pem ubuntu@$PUBLIC_IP sudo kubectl rollout restart deployment project-deployment
+                aws ecr get-login-password --region us-west-1 | docker login --username AWS --password-stdin 333082661382.dkr.ecr.us-west-1.amazonaws.com
+                scp file.txt -i ~/test-servers-key.pem ubuntu@$PUBLIC_IP:/home/ubuntu
+                ssh -i ~/test-servers-key.pem ubuntu@$PUBLIC_IP ls /home/ubuntu
                 '''
             }
         }
     }
 }
-
